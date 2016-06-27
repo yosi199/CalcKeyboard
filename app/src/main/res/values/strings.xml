@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">CalcKeyboard</string>
+    <string name="calc_service">Calc Keyboard</string>
+    <string name="subtype_digits">Digits</string>
+</resources>
