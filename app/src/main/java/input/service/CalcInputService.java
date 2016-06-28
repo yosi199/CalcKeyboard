@@ -1,6 +1,7 @@
 package input.service;
 
 import android.inputmethodservice.InputMethodService;
+import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -66,6 +67,9 @@ public class CalcInputService extends InputMethodService implements KeyboardView
     public void onKey(int primaryCode, int[] keyCodes) {
         InputConnection ic = getCurrentInputConnection();
         switch (primaryCode) {
+            case Keyboard.KEYCODE_DELETE:
+                ic.deleteSurroundingText(1, 0);
+                break;
             default:
                 char code = (char) primaryCode;
                 ic.commitText(String.valueOf(code), 1);

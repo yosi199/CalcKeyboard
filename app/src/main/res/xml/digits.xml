@@ -4,8 +4,8 @@
 
 <Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
     android:horizontalGap="0dp"
-    android:keyHeight="60dp"
-    android:keyWidth="10%p"
+    android:keyHeight="40dp"
+    android:keyWidth="25%p"
     android:verticalGap="0dp">
 
     <Row>
@@ -54,8 +54,49 @@
             android:keyLabel="8" />
         <Key
             android:codes="57"
-            android:keyEdgeFlags="right"
             android:keyLabel="9" />
+
+        <Key
+            android:codes="47"
+            android:keyEdgeFlags="right"
+            android:keyLabel="/" />
+
     </Row>
+
+    <Row>
+
+        <Key
+            android:codes="-5"
+            android:keyEdgeFlags="left"
+            android:keyLabel="Back" />
+
+        <Key
+            android:codes="48"
+            android:keyLabel="0" />
+
+        <Key
+            android:codes="20"
+            android:keyLabel="Calculate" />
+
+
+        <Key
+            android:codes="42"
+            android:keyEdgeFlags="right"
+            android:keyLabel="*" />
+
+    </Row>
+
+    <Row>
+        <Key
+            android:codes="-199"
+            android:keyEdgeFlags="left"
+            android:keyLabel="History" />
+
+        <Key
+            android:codes="-200"
+            android:keyLabel="Settings" />
+
+    </Row>
+
 
 </Keyboard>
