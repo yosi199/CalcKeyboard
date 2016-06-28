@@ -33,6 +33,7 @@ public class CalcInputService extends InputMethodService implements KeyboardView
     public View onCreateInputView() {
         mKeyboardView = (CalcKeyboardView) getLayoutInflater().inflate(R.layout.input_layout, null);
         mKeyboard = new CalcKeyboard(this, R.xml.digits);
+        mKeyboardView.setPreviewEnabled(false);
         mKeyboardView.setKeyboard(mKeyboard);
         mKeyboardView.setOnKeyboardActionListener(this);
         return mKeyboardView;
@@ -47,10 +48,7 @@ public class CalcInputService extends InputMethodService implements KeyboardView
     @Override
     public void onStartInput(EditorInfo attribute, boolean restarting) {
         super.onStartInput(attribute, restarting);
-
         mTextComposition.setLength(0);
-
-
     }
 
     @Override
@@ -69,6 +67,11 @@ public class CalcInputService extends InputMethodService implements KeyboardView
         switch (primaryCode) {
             case Keyboard.KEYCODE_DELETE:
                 ic.deleteSurroundingText(1, 0);
+                break;
+            case CalcKeyboard.SETTINGS_KEY:
+                showInputChooser();
+                break;
+            case CalcKeyboard.CALCULATE:
                 break;
             default:
                 char code = (char) primaryCode;
@@ -100,5 +103,11 @@ public class CalcInputService extends InputMethodService implements KeyboardView
     @Override
     public void swipeUp() {
 
+    }
+
+    private void showInputChooser() {
+        if (mInputMethodManager != null) {
+            mInputMethodManager.showInputMethodPicker();
+        }
     }
 }
