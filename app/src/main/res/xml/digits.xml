@@ -68,7 +68,8 @@
         <Key
             android:codes="-5"
             android:keyEdgeFlags="left"
-            android:keyLabel="Back" />
+            android:isRepeatable="true"
+            android:keyLabel="Clear" />
 
         <Key
             android:codes="48"
