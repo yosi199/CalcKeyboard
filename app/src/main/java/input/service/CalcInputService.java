@@ -3,6 +3,7 @@ package input.service;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
@@ -10,6 +11,8 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.example.yosimizrachi.calckeyboard.R;
 
+import input.CalcManager;
+import input.calculator.HistoryItem;
 import views.CalcKeyboard;
 import views.CalcKeyboardView;
 
@@ -23,6 +26,8 @@ public class CalcInputService extends InputMethodService implements KeyboardView
     private CalcKeyboardView mKeyboardView;
     private CalcKeyboard mKeyboard;
     private StringBuilder mTextComposition = new StringBuilder();
+    private final CalcManager mCalcManager = CalcManager.getInstance();
+
 
     @Override
     public void onCreate() {
@@ -51,15 +56,6 @@ public class CalcInputService extends InputMethodService implements KeyboardView
         super.onStartInput(attribute, restarting);
     }
 
-    @Override
-    public void onPress(int primaryCode) {
-
-    }
-
-    @Override
-    public void onRelease(int primaryCode) {
-
-    }
 
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
@@ -73,15 +69,20 @@ public class CalcInputService extends InputMethodService implements KeyboardView
                 break;
             case CalcKeyboard.CALCULATE:
                 try {
-                    int result = calculate(mTextComposition.toString());
+                    HistoryItem historyItem = new HistoryItem();
+                    int result = calculate(mTextComposition.toString(), historyItem);
                     reset();
                     mTextComposition.append(result);
                     ic.commitText(String.valueOf(result), 1);
+                    mCalcManager.addToHistory(historyItem);
                 } catch (NumberFormatException exception) {
                     // "complicated expressions not yet implemented. For now only simple expression will be evaluated.
                     reset();
                     ic.commitText(getString(R.string.error), 1);
                 }
+                break;
+            case CalcKeyboard.HISTORY:
+                Log.d(TAG, "ITEMS IN HISTORY " + mCalcManager.getHistoryItems().size());
                 break;
             default:
                 char code = (char) primaryCode;
@@ -90,30 +91,6 @@ public class CalcInputService extends InputMethodService implements KeyboardView
         }
     }
 
-    @Override
-    public void onText(CharSequence text) {
-
-    }
-
-    @Override
-    public void swipeLeft() {
-
-    }
-
-    @Override
-    public void swipeRight() {
-
-    }
-
-    @Override
-    public void swipeDown() {
-
-    }
-
-    @Override
-    public void swipeUp() {
-
-    }
 
     private void showInputChooser() {
         if (mInputMethodManager != null) {
@@ -121,12 +98,21 @@ public class CalcInputService extends InputMethodService implements KeyboardView
         }
     }
 
-    private int calculate(String input) {
+    /**
+     * Will parse user input and calculate the result
+     *
+     * @param input the user input
+     * @return the result of calculation
+     */
+    private int calculate(String input, HistoryItem historyItem) {
         int expressionStarts = 0;
         int expressionEnds = 0;
         String memberAString = null;
         String memberBString = null;
         int result = 0000;
+
+
+        //TODO optimize!!!
 
         for (int index = 0; index < input.length(); index++) {
             char currentChar = input.charAt(index);
@@ -140,25 +126,33 @@ public class CalcInputService extends InputMethodService implements KeyboardView
                 memberBString = input.substring(index + 1, expressionEnds);
             }
 
+            int numA = Integer.valueOf(memberAString);
+            int numB = Integer.valueOf(memberBString);
+            historyItem.setMemberA(numA);
+            historyItem.setMemberB(numB);
 
             switch (currentChar) {
                 case '+':
-                    result = add(Integer.valueOf(memberAString), Integer.valueOf(memberBString));
+                    historyItem.setType(HistoryItem.OperationType.ADD);
+                    result = mCalcManager.add(numA, numB);
                     break;
                 case '-':
-                    result = subtract(Integer.valueOf(memberAString), Integer.valueOf(memberBString));
+                    historyItem.setType(HistoryItem.OperationType.SUBTRACT);
+                    result = mCalcManager.subtract(numA, numB);
                     break;
                 case '*':
-                    result = multiply(Integer.valueOf(memberAString), Integer.valueOf(memberBString));
+                    historyItem.setType(HistoryItem.OperationType.MULTIPLY);
+                    result = mCalcManager.multiply(numA, numB);
                     break;
                 case '/':
-                    result = divide(Integer.valueOf(memberAString), Integer.valueOf(memberBString));
+                    historyItem.setType(HistoryItem.OperationType.DIVIDE);
+                    result = mCalcManager.divide(numA, numB);
                     break;
             }
         }
+        historyItem.setResult(result);
         return result;
     }
-
 
     private void reset() {
         mTextComposition.delete(0, mTextComposition.length());
@@ -200,21 +194,39 @@ public class CalcInputService extends InputMethodService implements KeyboardView
         return input.length();
     }
 
+    @Override
+    public void onText(CharSequence text) {
 
-    // TODO implement in JNI
-    private int multiply(int a, int b) {
-        return a * b;
     }
 
-    private int divide(int a, int b) {
-        return a / b;
+    @Override
+    public void swipeLeft() {
+
     }
 
-    private int add(int a, int b) {
-        return a + b;
+    @Override
+    public void swipeRight() {
+
     }
 
-    private int subtract(int a, int b) {
-        return a - b;
+    @Override
+    public void swipeDown() {
+
     }
+
+    @Override
+    public void swipeUp() {
+
+    }
+
+    @Override
+    public void onPress(int primaryCode) {
+
+    }
+
+    @Override
+    public void onRelease(int primaryCode) {
+
+    }
+
 }

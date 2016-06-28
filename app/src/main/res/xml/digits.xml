@@ -67,8 +67,8 @@
 
         <Key
             android:codes="-5"
-            android:keyEdgeFlags="left"
             android:isRepeatable="true"
+            android:keyEdgeFlags="left"
             android:keyLabel="Clear" />
 
         <Key

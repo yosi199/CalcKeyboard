@@ -9,6 +9,7 @@ import android.inputmethodservice.Keyboard;
 public class CalcKeyboard extends Keyboard {
 
     public static final int SETTINGS_KEY = -200;
+    public static final int HISTORY = -199;
     public static final int CALCULATE = 20;
 
     public CalcKeyboard(Context context, int xmlLayoutResId) {
