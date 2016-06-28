@@ -4,7 +4,7 @@
 
 <Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
     android:horizontalGap="0dp"
-    android:keyHeight="40dp"
+    android:keyHeight="6.5%p"
     android:keyWidth="25%p"
     android:verticalGap="0dp">
 
@@ -91,11 +91,13 @@
         <Key
             android:codes="-199"
             android:keyEdgeFlags="left"
-            android:keyLabel="History" />
+            android:keyLabel="History"
+            android:keyWidth="50%p" />
 
         <Key
             android:codes="-200"
-            android:keyLabel="Settings" />
+            android:keyLabel="Settings"
+            android:keyWidth="50%p" />
 
     </Row>
 
