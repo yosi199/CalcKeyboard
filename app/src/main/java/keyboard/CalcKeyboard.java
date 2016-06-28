@@ -1,4 +1,4 @@
-package views;
+package keyboard;
 
 import android.content.Context;
 import android.inputmethodservice.Keyboard;

@@ -1,13 +1,13 @@
-package input;
+package input.calculator;
 
 import java.util.ArrayList;
-
-import input.calculator.HistoryItem;
 
 /**
  * Created by yosimizrachi on 28/06/2016.
  */
 public class CalcManager {
+
+    private static final CalcManager INSTANCE = new CalcManager();
 
     // Native code
     static {
@@ -15,6 +15,13 @@ public class CalcManager {
     }
 
     private ArrayList<HistoryItem> mHistoryItems;
+
+    private CalcManager() {
+    }
+
+    public static CalcManager getInstance() {
+        return INSTANCE;
+    }
 
     private final native int nativeMultiply(int a, int b);
 
@@ -24,47 +31,22 @@ public class CalcManager {
 
     private final native int nativeSubtract(int a, int b);
 
-    private static final CalcManager INSTANCE = new CalcManager();
-
-    private CalcManager() {
-    }
-
-    public static CalcManager getInstance() {
-        return INSTANCE;
-    }
-
     public int multiply(int a, int b) throws IllegalArgumentException {
-        if (a == 0 || b == 0) {
-            throwError();
-        }
         return nativeMultiply(a, b);
     }
 
     public int divide(int a, int b) throws IllegalArgumentException {
-        if (a == 0 || b == 0) {
-            throwError();
-        }
         return nativeDivide(a, b);
     }
 
     public int add(int a, int b) throws IllegalArgumentException {
-        if (a == 0 || b == 0) {
-            throwError();
-        }
         return nativeAdd(a, b);
     }
 
     public int subtract(int a, int b) throws IllegalArgumentException {
-        if (a == 0 || b == 0) {
-            throwError();
-        }
         return nativeSubtract(a, b);
     }
 
-    private void throwError() {
-        throw new IllegalArgumentException("Please enter valid numbers");
-
-    }
 
     public void addToHistory(HistoryItem historyItem) {
         if (mHistoryItems == null) {

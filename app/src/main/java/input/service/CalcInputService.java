@@ -11,10 +11,10 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.example.yosimizrachi.calckeyboard.R;
 
-import input.CalcManager;
+import input.calculator.CalcManager;
 import input.calculator.HistoryItem;
-import views.CalcKeyboard;
-import views.CalcKeyboardView;
+import keyboard.CalcKeyboard;
+import keyboard.CalcKeyboardView;
 
 /**
  * Created by yosimizrachi on 27/06/16.
@@ -22,12 +22,11 @@ import views.CalcKeyboardView;
 public class CalcInputService extends InputMethodService implements KeyboardView.OnKeyboardActionListener {
 
     private static final String TAG = "CalcInputService";
+    private final CalcManager mCalcManager = CalcManager.getInstance();
     private InputMethodManager mInputMethodManager;
     private CalcKeyboardView mKeyboardView;
     private CalcKeyboard mKeyboard;
     private StringBuilder mTextComposition = new StringBuilder();
-    private final CalcManager mCalcManager = CalcManager.getInstance();
-
 
     @Override
     public void onCreate() {
@@ -124,6 +123,8 @@ public class CalcInputService extends InputMethodService implements KeyboardView
 
                 memberAString = input.substring(expressionStarts, index);
                 memberBString = input.substring(index + 1, expressionEnds);
+            } else {
+                continue;
             }
 
             int numA = Integer.valueOf(memberAString);
@@ -166,9 +167,6 @@ public class CalcInputService extends InputMethodService implements KeyboardView
         //go back in the input and see where the first member of the operation starts
 
         for (int i = index; i > 0; i--) {
-            if (i == 0) {
-                return 0;
-            }
 
             char currChar = input.charAt(i);
             if (currChar == '+' || currChar == '-' || currChar == '*' || currChar == '/') {
