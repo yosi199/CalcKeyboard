@@ -73,14 +73,18 @@ public class CalcManager {
 
     private final void parseMemberA(String input, CalculationItem item) {
 
-        int operatorIndex = item.getType().getOperatorIndex();
-        item.setMemberA(Integer.valueOf(input.substring(0, operatorIndex)));
+        if (item.getType() != null) {
+            int operatorIndex = item.getType().getOperatorIndex();
+            item.setMemberA(Integer.valueOf(input.substring(0, operatorIndex)));
+        }
     }
 
     private final void parseMemberB(String input, CalculationItem item) {
 
-        int operatorIndex = item.getType().getOperatorIndex();
-        item.setMemberB(Integer.valueOf(input.substring(operatorIndex + 1, input.length())));
+        if (item.getType() != null) {
+            int operatorIndex = item.getType().getOperatorIndex();
+            item.setMemberB(Integer.valueOf(input.substring(operatorIndex + 1, input.length())));
+        }
     }
 
 

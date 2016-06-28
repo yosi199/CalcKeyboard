@@ -54,13 +54,17 @@ public class CalculationItem {
         if (mType != null) {
             switch (mType) {
                 case MULTIPLY:
-                    return nativeMultiply(mMemberA, mMemberB);
+                    mResult = nativeMultiply(mMemberA, mMemberB);
+                    return mResult;
                 case DIVIDE:
-                    return nativeDivide(mMemberA, mMemberB);
+                    mResult = nativeDivide(mMemberA, mMemberB);
+                    return mResult;
                 case SUBTRACT:
-                    return nativeSubtract(mMemberA, mMemberB);
+                    mResult = nativeSubtract(mMemberA, mMemberB);
+                    return mResult;
                 case ADD:
-                    return nativeAdd(mMemberA, mMemberB);
+                    mResult = nativeAdd(mMemberA, mMemberB);
+                    return mResult;
                 default:
                     return -1;
             }

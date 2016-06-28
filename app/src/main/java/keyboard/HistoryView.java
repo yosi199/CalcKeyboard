@@ -14,6 +14,9 @@ import input.calculator.CalculationItem;
  */
 public class HistoryView extends ListView {
 
+
+    private HistoryAdapter mAdapter;
+
     public HistoryView(Context context) {
         super(context);
         init();
@@ -30,12 +33,12 @@ public class HistoryView extends ListView {
     }
 
     private void init() {
-
+        mAdapter = new HistoryAdapter();
+        setAdapter(mAdapter);
     }
 
     public void loadHistory() {
         ArrayList<CalculationItem> items = CalcManager.getInstance().getHistoryItems();
-        HistoryAdapter adapter = new HistoryAdapter(items);
-        setAdapter(adapter);
+        mAdapter.updateData(items);
     }
 }

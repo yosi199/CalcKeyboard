@@ -13,6 +13,7 @@ import com.example.yosimizrachi.calckeyboard.R;
 import input.calculator.CalcManager;
 import keyboard.CalcKeyboard;
 import keyboard.CalcKeyboardView;
+import keyboard.HistoryAdapter;
 import keyboard.HistoryView;
 
 /**
@@ -27,6 +28,7 @@ public class CalcInputService extends InputMethodService implements KeyboardView
     private CalcKeyboard mKeyboard;
     private HistoryView mHistoryView;
     private StringBuilder mTextComposition = new StringBuilder();
+    private boolean historyShown = false;
 
     @Override
     public void onCreate() {
@@ -73,6 +75,9 @@ public class CalcInputService extends InputMethodService implements KeyboardView
                     reset();
                     mTextComposition.append(result);
                     ic.commitText(String.valueOf(result), 1);
+                    if (historyShown) { // if history already shown to user - update the list
+                        ((HistoryAdapter) mHistoryView.getAdapter()).notifyDataSetChanged();
+                    }
                 } catch (NumberFormatException exception) {
                     // "complicated expressions not yet implemented. For now only simple expression will be evaluated.
                     reset();
@@ -80,8 +85,14 @@ public class CalcInputService extends InputMethodService implements KeyboardView
                 }
                 break;
             case CalcKeyboard.HISTORY:
-                mHistoryView.loadHistory();
-                setCandidatesViewShown(true);
+                if (!historyShown) {
+                    historyShown = true;
+                    mHistoryView.loadHistory();
+                    setCandidatesViewShown(true);
+                } else {
+                    historyShown = false;
+                    setCandidatesViewShown(false);
+                }
                 break;
             default:
                 char code = (char) primaryCode;

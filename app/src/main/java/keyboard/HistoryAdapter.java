@@ -17,10 +17,14 @@ import input.calculator.CalculationItem;
  */
 public class HistoryAdapter extends BaseAdapter {
 
-    private ArrayList<CalculationItem> mItems;
+    private ArrayList<CalculationItem> mItems = new ArrayList<>();
 
-    public HistoryAdapter(ArrayList<CalculationItem> items) {
+    public HistoryAdapter() {
+    }
+
+    public void updateData(ArrayList<CalculationItem> items) {
         mItems = items;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -48,6 +52,7 @@ public class HistoryAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.history_item, parent, false);
             holder = new HistoryHolder();
             holder.memberA = (TextView) convertView.findViewById(R.id.history_member_A);
+            holder.operator = (TextView) convertView.findViewById(R.id.operator);
             holder.memberB = (TextView) convertView.findViewById(R.id.history_member_B);
             holder.result = (TextView) convertView.findViewById(R.id.history_result);
             convertView.setTag(holder);
@@ -56,6 +61,7 @@ public class HistoryAdapter extends BaseAdapter {
         }
 
         holder.memberA.setText("" + item.getMemberA());
+        holder.operator.setText(" " + item.getType().getType() + " ");
         holder.memberB.setText("" + item.getMemberB());
         holder.result.setText("" + item.getResult());
 
@@ -64,6 +70,7 @@ public class HistoryAdapter extends BaseAdapter {
 
     public static class HistoryHolder {
         TextView memberA;
+        TextView operator;
         TextView memberB;
         TextView result;
 
