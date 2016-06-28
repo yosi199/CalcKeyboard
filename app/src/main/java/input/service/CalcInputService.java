@@ -3,7 +3,6 @@ package input.service;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
@@ -14,6 +13,7 @@ import com.example.yosimizrachi.calckeyboard.R;
 import input.calculator.CalcManager;
 import keyboard.CalcKeyboard;
 import keyboard.CalcKeyboardView;
+import keyboard.HistoryView;
 
 /**
  * Created by yosimizrachi on 27/06/16.
@@ -25,6 +25,7 @@ public class CalcInputService extends InputMethodService implements KeyboardView
     private InputMethodManager mInputMethodManager;
     private CalcKeyboardView mKeyboardView;
     private CalcKeyboard mKeyboard;
+    private HistoryView mHistoryView;
     private StringBuilder mTextComposition = new StringBuilder();
 
     @Override
@@ -46,14 +47,15 @@ public class CalcInputService extends InputMethodService implements KeyboardView
     @Override
     public View onCreateCandidatesView() {
         // the layout for the history transactions
-        return super.onCreateCandidatesView();
+        mHistoryView = (HistoryView) getLayoutInflater().inflate(R.layout.history_layout, null);
+        return mHistoryView;
+//        return super.onCreateCandidatesView();
     }
 
     @Override
     public void onStartInput(EditorInfo attribute, boolean restarting) {
         super.onStartInput(attribute, restarting);
     }
-
 
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
@@ -78,7 +80,8 @@ public class CalcInputService extends InputMethodService implements KeyboardView
                 }
                 break;
             case CalcKeyboard.HISTORY:
-                Log.d(TAG, "ITEMS IN HISTORY " + mCalcManager.getHistoryItems().size());
+                mHistoryView.loadHistory();
+                setCandidatesViewShown(true);
                 break;
             default:
                 char code = (char) primaryCode;
@@ -98,7 +101,6 @@ public class CalcInputService extends InputMethodService implements KeyboardView
         mTextComposition.delete(0, mTextComposition.length());
         getCurrentInputConnection().deleteSurroundingText(1000, 1000);
     }
-
 
     @Override
     public void onText(CharSequence text) {
