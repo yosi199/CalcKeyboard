@@ -2,6 +2,7 @@ package keyboard;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -41,6 +42,8 @@ public class HistoryView extends ListView {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) getLayoutParams();
+//        params.height =
     }
 
     public void loadHistory() {
