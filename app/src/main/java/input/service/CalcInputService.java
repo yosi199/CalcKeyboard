@@ -1,10 +1,11 @@
 package input.service;
 
+import android.animation.ValueAnimator;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
+import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 
@@ -30,6 +31,7 @@ public class CalcInputService extends InputMethodService implements KeyboardView
     private HistoryView mHistoryListView;
     private StringBuilder mTextComposition = new StringBuilder();
     private boolean historyShown = false;
+    ValueAnimator anim = ValueAnimator.ofInt(0, 1000);
 
     @Override
     public void onCreate() {
@@ -52,21 +54,33 @@ public class CalcInputService extends InputMethodService implements KeyboardView
         // the layout for the history transactions
         mHistoryLayout = (HistoryLayout) getLayoutInflater().inflate(R.layout.history_layout, null);
         mHistoryListView = (HistoryView) mHistoryLayout.findViewById(R.id.history);
+
+        anim.setDuration(3000);
+
         return mHistoryLayout;
     }
 
     @Override
-    public void onComputeInsets(InputMethodService.Insets outInsets) {
+    public void onComputeInsets(final InputMethodService.Insets outInsets) {
+        Log.d(TAG, "Content " + outInsets.contentTopInsets);
+        Log.d(TAG, "VISIBLE " + outInsets.visibleTopInsets);
         super.onComputeInsets(outInsets);
-        if (!isFullscreenMode()) {
-            outInsets.contentTopInsets = outInsets.visibleTopInsets;
+//        if (!isFullscreenMode()) {
+//            outInsets.contentTopInsets = outInsets.visibleTopInsets;
+//        }
+
+
+        if (!anim.isStarted() && !anim.isRunning()) {
+            anim.start();
+            anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    outInsets.visibleTopInsets = (int) animation.getAnimatedValue();
+                }
+            });
         }
     }
 
-    @Override
-    public void onStartInput(EditorInfo attribute, boolean restarting) {
-        super.onStartInput(attribute, restarting);
-    }
 
     @Override
     public void onFinishInput() {

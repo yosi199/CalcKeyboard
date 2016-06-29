@@ -42,8 +42,7 @@ public class HistoryView extends ListView {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) getLayoutParams();
-//        params.height =
+
     }
 
     public void loadHistory() {
