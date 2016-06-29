@@ -1,6 +1,5 @@
 package keyboard;
 
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.util.AttributeSet;
@@ -13,7 +12,6 @@ import android.widget.LinearLayout;
 public class HistoryLayout extends LinearLayout {
 
     private ValueAnimator mAnimator;
-
 
     public HistoryLayout(Context context) {
         super(context);
@@ -30,10 +28,11 @@ public class HistoryLayout extends LinearLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        setTranslationY(500);
+//        setTranslationY(500);
+//
+//        mAnimator = ObjectAnimator.ofFloat(this, "translationY", 500, 0);
+//        mAnimator.setDuration(500);
 
-        mAnimator = ObjectAnimator.ofFloat(this, "translationY", 2000, 0);
-        mAnimator.setDuration(500);
     }
 
     public void animateToPosition(boolean shown) {

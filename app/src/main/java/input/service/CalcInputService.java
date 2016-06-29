@@ -4,10 +4,11 @@ import android.animation.ValueAnimator;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
-import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 
 import com.example.yosimizrachi.calckeyboard.R;
 
@@ -20,10 +21,12 @@ import keyboard.HistoryView;
 /**
  * Created by yosimizrachi on 27/06/16.
  */
-public class CalcInputService extends InputMethodService implements KeyboardView.OnKeyboardActionListener {
+public class CalcInputService extends InputMethodService implements KeyboardView.OnKeyboardActionListener, ViewTreeObserver.OnPreDrawListener {
 
     private static final String TAG = "CalcInputService";
     private final CalcManager mCalcManager = CalcManager.getInstance();
+    int candidateHeight = 0;
+    int treeHeight = 0;
     private InputMethodManager mInputMethodManager;
     private CalcKeyboardView mKeyboardView;
     private CalcKeyboard mKeyboard;
@@ -31,12 +34,14 @@ public class CalcInputService extends InputMethodService implements KeyboardView
     private HistoryView mHistoryListView;
     private StringBuilder mTextComposition = new StringBuilder();
     private boolean historyShown = false;
-    ValueAnimator anim = ValueAnimator.ofInt(0, 1000);
+    private Insets mInstes;
+    private int mHistoryHeight;
 
     @Override
     public void onCreate() {
         super.onCreate();
         mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        mHistoryHeight = getBaseContext().getResources().getDimensionPixelSize(R.dimen.history_height);
     }
 
     @Override
@@ -46,6 +51,8 @@ public class CalcInputService extends InputMethodService implements KeyboardView
         mKeyboardView.setPreviewEnabled(false);
         mKeyboardView.setKeyboard(mKeyboard);
         mKeyboardView.setOnKeyboardActionListener(this);
+        mKeyboardView.getViewTreeObserver().addOnPreDrawListener(this);
+        super.setCandidatesViewShown(true);
         return mKeyboardView;
     }
 
@@ -54,33 +61,25 @@ public class CalcInputService extends InputMethodService implements KeyboardView
         // the layout for the history transactions
         mHistoryLayout = (HistoryLayout) getLayoutInflater().inflate(R.layout.history_layout, null);
         mHistoryListView = (HistoryView) mHistoryLayout.findViewById(R.id.history);
+//        mHistoryLayout.setTranslationY(500);
 
-        anim.setDuration(3000);
+        mHistoryLayout.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                if (candidateHeight != mHistoryLayout.getHeight()) {
+                    candidateHeight = mHistoryLayout.getHeight();
+                } else {
+                    mHistoryLayout.getViewTreeObserver().removeOnPreDrawListener(this);
+                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mHistoryLayout.getLayoutParams();
+                    params.height = 0;
+                    mHistoryLayout.setLayoutParams(params);
+                }
+                return false;
+            }
+        });
 
         return mHistoryLayout;
     }
-
-    @Override
-    public void onComputeInsets(final InputMethodService.Insets outInsets) {
-        Log.d(TAG, "Content " + outInsets.contentTopInsets);
-        Log.d(TAG, "VISIBLE " + outInsets.visibleTopInsets);
-        super.onComputeInsets(outInsets);
-//        if (!isFullscreenMode()) {
-//            outInsets.contentTopInsets = outInsets.visibleTopInsets;
-//        }
-
-
-        if (!anim.isStarted() && !anim.isRunning()) {
-            anim.start();
-            anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    outInsets.visibleTopInsets = (int) animation.getAnimatedValue();
-                }
-            });
-        }
-    }
-
 
     @Override
     public void onFinishInput() {
@@ -130,9 +129,37 @@ public class CalcInputService extends InputMethodService implements KeyboardView
     }
 
     @Override
+    public void onComputeInsets(final InputMethodService.Insets outInsets) {
+        mInstes = outInsets;
+//        super.onComputeInsets(outInsets);
+        if (!isFullscreenMode()) {
+            outInsets.contentTopInsets = outInsets.visibleTopInsets;
+        }
+
+    }
+
+    @Override
     public void setCandidatesViewShown(boolean shown) {
-        super.setCandidatesViewShown(shown);
-        mHistoryLayout.animateToPosition(shown);
+//        super.setCandidatesViewShown(shown);
+        ValueAnimator anim = ValueAnimator.ofInt(0, candidateHeight);
+        anim.setDuration(100);
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int value = (int) animation.getAnimatedValue();
+                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mHistoryLayout.getLayoutParams();
+                params.height = value;
+                mHistoryLayout.setLayoutParams(params);
+//                mInstes.visibleTopInsets = value;
+//                mInstes.contentTopInsets = value;
+            }
+        });
+        if (shown) {
+            anim.start();
+        } else {
+            anim.reverse();
+        }
+//        mHistoryLayout.animateToPosition(shown);
     }
 
     private void showInputChooser() {
@@ -181,4 +208,16 @@ public class CalcInputService extends InputMethodService implements KeyboardView
 
     }
 
+    @Override
+    public boolean onPreDraw() {
+        if (treeHeight != mKeyboardView.getBottom()) {
+            treeHeight = mKeyboardView.getBottom();
+        } else {
+            mKeyboardView.getViewTreeObserver().removeOnPreDrawListener(this);
+
+        }
+
+
+        return true;
+    }
 }

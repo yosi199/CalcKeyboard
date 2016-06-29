@@ -5,10 +5,6 @@ package input.calculator;
  */
 public class CalculationItem {
 
-    // Native code
-    static {
-        System.loadLibrary("ndkModule");
-    }
 
     private int mMemberA;
     private int mMemberB;

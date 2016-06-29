@@ -2,7 +2,6 @@ package keyboard;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import java.util.ArrayList;

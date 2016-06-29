@@ -9,6 +9,11 @@ public class CalcManager {
 
     private static final CalcManager INSTANCE = new CalcManager();
 
+    // Native code
+    static {
+        System.loadLibrary("ndkModule");
+    }
+
     private ArrayList<CalculationItem> mCalculationItems;
 
     private CalcManager() {

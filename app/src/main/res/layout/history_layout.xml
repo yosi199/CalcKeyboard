@@ -2,12 +2,13 @@
 <keyboard.HistoryLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/history_layout"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
+    android:layout_height="@dimen/history_height"
+    android:animateLayoutChanges="true"
     android:orientation="vertical">
 
     <keyboard.HistoryView
         android:id="@+id/history"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="@dimen/history_height"
         android:background="@android:color/white" />
 </keyboard.HistoryLayout>
