@@ -52,7 +52,7 @@ public class CalcInputService extends InputMethodService implements KeyboardView
     public View onCreateCandidatesView() {
         // the layout for the history transactions
         mHistoryLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.history_layout, null);
-        mHistoryListView = (HistoryView)mHistoryLayout.findViewById(R.id.history);
+        mHistoryListView = (HistoryView) mHistoryLayout.findViewById(R.id.history);
         return mHistoryLayout;
     }
 
@@ -86,7 +86,8 @@ public class CalcInputService extends InputMethodService implements KeyboardView
                     mTextComposition.append(result);
                     ic.commitText(String.valueOf(result), 1);
                     if (historyShown) { // if history already shown to user - update the list
-                        ((HistoryAdapter) mHistoryListView.getAdapter()).notifyDataSetChanged();
+                        mHistoryListView.update();
+
                     }
                 } catch (NumberFormatException exception) {
                     // "complicated expressions not yet implemented. For now only simple expression will be evaluated.

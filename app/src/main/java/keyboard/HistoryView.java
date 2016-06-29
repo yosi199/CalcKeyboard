@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import input.calculator.CalcManager;
 import input.calculator.CalculationItem;
 
+
 /**
  * Created by yosimizrachi on 28/06/16.
  */
@@ -35,11 +36,22 @@ public class HistoryView extends ListView {
     private void init() {
         mAdapter = new HistoryAdapter();
         setAdapter(mAdapter);
+    }
 
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
     }
 
     public void loadHistory() {
         ArrayList<CalculationItem> items = CalcManager.getInstance().getHistoryItems();
         mAdapter.updateData(items);
     }
+
+    public void update() {
+        mAdapter.notifyDataSetChanged();
+        smoothScrollToPosition(mAdapter.getCount() - 1);
+    }
+
+
 }
