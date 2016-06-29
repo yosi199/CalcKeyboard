@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.LinearLayout;
 
 import com.example.yosimizrachi.calckeyboard.R;
 
@@ -26,7 +27,8 @@ public class CalcInputService extends InputMethodService implements KeyboardView
     private InputMethodManager mInputMethodManager;
     private CalcKeyboardView mKeyboardView;
     private CalcKeyboard mKeyboard;
-    private HistoryView mHistoryView;
+    private LinearLayout mHistoryLayout;
+    private HistoryView mHistoryListView;
     private StringBuilder mTextComposition = new StringBuilder();
     private boolean historyShown = false;
 
@@ -49,9 +51,9 @@ public class CalcInputService extends InputMethodService implements KeyboardView
     @Override
     public View onCreateCandidatesView() {
         // the layout for the history transactions
-        mHistoryView = (HistoryView) getLayoutInflater().inflate(R.layout.history_layout, null);
-        return mHistoryView;
-//        return super.onCreateCandidatesView();
+        mHistoryLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.history_layout, null);
+        mHistoryListView = (HistoryView)mHistoryLayout.findViewById(R.id.history);
+        return mHistoryLayout;
     }
 
     @Override
@@ -84,7 +86,7 @@ public class CalcInputService extends InputMethodService implements KeyboardView
                     mTextComposition.append(result);
                     ic.commitText(String.valueOf(result), 1);
                     if (historyShown) { // if history already shown to user - update the list
-                        ((HistoryAdapter) mHistoryView.getAdapter()).notifyDataSetChanged();
+                        ((HistoryAdapter) mHistoryListView.getAdapter()).notifyDataSetChanged();
                     }
                 } catch (NumberFormatException exception) {
                     // "complicated expressions not yet implemented. For now only simple expression will be evaluated.
@@ -95,7 +97,7 @@ public class CalcInputService extends InputMethodService implements KeyboardView
             case CalcKeyboard.HISTORY:
                 if (!historyShown) {
                     historyShown = true;
-                    mHistoryView.loadHistory();
+                    mHistoryListView.loadHistory();
                     setCandidatesViewShown(true);
                 } else {
                     historyShown = false;

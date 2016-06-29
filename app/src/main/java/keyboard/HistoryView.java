@@ -35,6 +35,7 @@ public class HistoryView extends ListView {
     private void init() {
         mAdapter = new HistoryAdapter();
         setAdapter(mAdapter);
+
     }
 
     public void loadHistory() {

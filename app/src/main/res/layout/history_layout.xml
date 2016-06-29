@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<keyboard.HistoryView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/history"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:id="@+id/history_layout"
+    android:orientation="vertical"
     android:layout_height="100dp"
-    android:animateLayoutChanges="true"
-    android:background="@android:color/white" />
+    android:background="@android:color/black">
+
+    <keyboard.HistoryView
+        android:id="@+id/history"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:animateLayoutChanges="true"
+        android:background="@android:color/white" />
+</LinearLayout>
