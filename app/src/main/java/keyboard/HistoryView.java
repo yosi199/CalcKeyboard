@@ -38,12 +38,6 @@ public class HistoryView extends ListView {
         setAdapter(mAdapter);
     }
 
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-
-    }
-
     public void loadHistory() {
         ArrayList<CalculationItem> items = CalcManager.getInstance().getHistoryItems();
         mAdapter.updateData(items);
@@ -58,6 +52,6 @@ public class HistoryView extends ListView {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mAdapter = null;
-
     }
+
 }

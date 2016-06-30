@@ -1,5 +1,6 @@
 package input.service;
 
+import android.content.res.Configuration;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
@@ -30,6 +31,7 @@ public class CalcInputService extends InputMethodService implements KeyboardView
     private CalcKeyboard mKeyboard;
     private HistoryView mHistoryListView;
     private StringBuilder mTextComposition = new StringBuilder();
+    private int mLastDisplayWidth;
     private boolean historyShown = false;
 
     @Override
@@ -39,9 +41,22 @@ public class CalcInputService extends InputMethodService implements KeyboardView
     }
 
     @Override
+    public void onInitializeInterface() {
+        if (mKeyboard != null) {
+            // Configuration changes can happen after the keyboard gets recreated,
+            // so we need to be able to re-build the keyboards if the available
+            // space has changed.
+            int displayWidth = getMaxWidth();
+            if (displayWidth == mLastDisplayWidth) return;
+            mLastDisplayWidth = displayWidth;
+        }
+        mKeyboard = new CalcKeyboard(this, R.xml.digits);
+    }
+
+
+    @Override
     public View onCreateInputView() {
         mKeyboardView = (CalcKeyboardView) getLayoutInflater().inflate(R.layout.input_layout, null);
-        mKeyboard = new CalcKeyboard(this, R.xml.digits);
         mKeyboardView.setPreviewEnabled(false);
         mKeyboardView.setKeyboard(mKeyboard);
         mKeyboardView.setOnKeyboardActionListener(this);
@@ -56,10 +71,6 @@ public class CalcInputService extends InputMethodService implements KeyboardView
         return mHistoryListView;
     }
 
-    @Override
-    public void onFinishInput() {
-        super.onFinishInput();
-    }
 
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
@@ -88,12 +99,9 @@ public class CalcInputService extends InputMethodService implements KeyboardView
                 break;
             case CalcKeyboard.HISTORY:
                 if (!historyShown) {
-                    historyShown = true;
-                    mHistoryListView.loadHistory();
-                    setCandidatesViewShown(true);
+                    showHistory();
                 } else {
-                    historyShown = false;
-                    setCandidatesViewShown(false);
+                    hideHistory();
                 }
                 break;
             default:
@@ -106,9 +114,9 @@ public class CalcInputService extends InputMethodService implements KeyboardView
     @Override
     public void onComputeInsets(final InputMethodService.Insets outInsets) {
         super.onComputeInsets(outInsets);
-        if (!isFullscreenMode()) {
+//        if (!isFullscreenMode()) {
             outInsets.touchableInsets = outInsets.contentTopInsets = outInsets.visibleTopInsets;
-        }
+//        }
 
     }
 
@@ -129,8 +137,29 @@ public class CalcInputService extends InputMethodService implements KeyboardView
     }
 
     @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (historyShown) {
+            showHistory();
+        } else {
+            hideHistory();
+        }
+    }
+
+    @Override
     public void setCandidatesViewShown(boolean shown) {
         super.setCandidatesViewShown(shown);
+    }
+
+    private void showHistory() {
+        historyShown = true;
+        mHistoryListView.loadHistory();
+        setCandidatesViewShown(true);
+    }
+
+    private void hideHistory() {
+        historyShown = false;
+        setCandidatesViewShown(false);
     }
 
     private void showInputChooser() {

@@ -3,6 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="history_item_text_size">15sp</dimen>
-    <dimen name="history_list_height">100dp</dimen>
+    <dimen name="history_list_height">60dp</dimen>
     <dimen name="history_height">60dp</dimen>
 </resources>

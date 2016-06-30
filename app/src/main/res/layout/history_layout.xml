@@ -5,3 +5,4 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/history_height"
     android:background="@android:color/white" />
+
