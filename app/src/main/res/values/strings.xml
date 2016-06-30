@@ -3,4 +3,5 @@
     <string name="calc_service">Calc Keyboard</string>
     <string name="subtype_digits">Digits</string>
     <string name="error">Error</string>
+    <string name="empty">Please enter calculation</string>
 </resources>

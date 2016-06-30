@@ -41,17 +41,19 @@ public class CalcManager {
      * @param input the user input
      * @return the result of calculation
      */
-    public int calculate(String input) {
+    public Integer calculate(String input) {
         CalculationItem calculationItem = new CalculationItem();
-        getOperationType(input, calculationItem);
+        setOperationType(input, calculationItem);
         parseMemberA(input, calculationItem);
         parseMemberB(input, calculationItem);
-        addToHistory(calculationItem);
+        if (calculationItem.isValid()) {
+            addToHistory(calculationItem);
+        }
 
         return calculationItem.calculateValue();
     }
 
-    private final void getOperationType(String input, CalculationItem item) {
+    private final void setOperationType(String input, CalculationItem item) {
 
         for (int i = 0; i < input.length(); i++) {
             char currChar = input.charAt(i);
@@ -72,6 +74,7 @@ public class CalcManager {
                     item.setType(CalculationItem.OperationType.DIVIDE);
                     item.getType().setOperatorIndex(i);
                     break;
+
             }
         }
     }

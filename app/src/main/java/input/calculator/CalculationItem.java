@@ -22,6 +22,10 @@ public class CalculationItem {
         mType = type;
     }
 
+    public boolean isValid() {
+        return mType != null ? true : false;
+    }
+
     public int getMemberA() {
         return mMemberA;
     }
@@ -50,13 +54,16 @@ public class CalculationItem {
         return mMemberA + mType.getType() + mMemberB;
     }
 
-    public int calculateValue() {
+    public Integer calculateValue() {
         if (mType != null) {
             switch (mType) {
                 case MULTIPLY:
                     mResult = nativeMultiply(mMemberA, mMemberB);
                     return mResult;
                 case DIVIDE:
+                    if (mMemberA == 0 || mMemberB == 0) {
+                        return null;
+                    }
                     mResult = nativeDivide(mMemberA, mMemberB);
                     return mResult;
                 case SUBTRACT:
@@ -66,10 +73,10 @@ public class CalculationItem {
                     mResult = nativeAdd(mMemberA, mMemberB);
                     return mResult;
                 default:
-                    return -1;
+                    return null;
             }
         } else {
-            return -1;
+            return null;
         }
     }
 
@@ -106,6 +113,7 @@ public class CalculationItem {
         public void setOperatorIndex(int index) {
             mOperatorIndex = index;
         }
+
     }
 
 

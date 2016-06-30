@@ -84,7 +84,26 @@ public class CalcInputService extends InputMethodService implements KeyboardView
                 break;
             case CalcKeyboard.CALCULATE:
                 try {
-                    int result = mCalcManager.calculate(mTextComposition.toString());
+                    String input = mTextComposition.toString();
+
+                    // nothing entered - show message to user
+                    if (input.length() == 0) {
+                        printEmptyValue();
+                        return;
+                    }
+
+                    // if not enough input to build a calculation
+                    if (input.length() > 0 && input.length() < 3) {
+                        return;
+                    }
+
+                    Integer result = mCalcManager.calculate(input);
+                    // if null something is wrong with calculation
+                    if (result == null) {
+                        printError();
+                        return;
+                    }
+
                     reset();
                     mTextComposition.append(result);
                     ic.commitText(String.valueOf(result), 1);
@@ -93,8 +112,7 @@ public class CalcInputService extends InputMethodService implements KeyboardView
                     }
                 } catch (NumberFormatException exception) {
                     // "complicated expressions not yet implemented. For now only simple expression will be evaluated.
-                    reset();
-                    ic.commitText(getString(R.string.error), 1);
+                    printError();
                 }
                 break;
             case CalcKeyboard.HISTORY:
@@ -111,11 +129,21 @@ public class CalcInputService extends InputMethodService implements KeyboardView
         }
     }
 
+    private void printError() {
+        reset();
+        getCurrentInputConnection().commitText(getString(R.string.error), 1);
+    }
+
+    private void printEmptyValue() {
+        reset();
+        getCurrentInputConnection().commitText(getString(R.string.empty), 1);
+    }
+
     @Override
     public void onComputeInsets(final InputMethodService.Insets outInsets) {
         super.onComputeInsets(outInsets);
 //        if (!isFullscreenMode()) {
-            outInsets.touchableInsets = outInsets.contentTopInsets = outInsets.visibleTopInsets;
+        outInsets.touchableInsets = outInsets.contentTopInsets = outInsets.visibleTopInsets;
 //        }
 
     }
