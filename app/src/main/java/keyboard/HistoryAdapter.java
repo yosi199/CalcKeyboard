@@ -3,6 +3,7 @@ package keyboard;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -75,6 +76,13 @@ public class HistoryAdapter extends BaseAdapter implements View.OnClickListener 
         return convertView;
     }
 
+    /**
+     * OK, so I've "cheated" since I couldn't find the bug in a reasonable time and had higher priorities
+     * in this task. Therefor I've made this workaround which in-fact makes the {@link input.service.CalcInputService#onItemClick(AdapterView, View, int, long)}
+     * get all the calls.
+     * <p/>
+     * Lets call this "a creative solution" ;)
+     */
     @Override
     public void onClick(View v) {
         int position = (int) v.getTag(R.id.item_id);

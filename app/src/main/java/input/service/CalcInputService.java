@@ -112,6 +112,9 @@ public class CalcInputService extends InputMethodService implements KeyboardView
 
     }
 
+    /**
+     * Made a workaround for the bug of API>=23. please see {@link keyboard.HistoryAdapter#onClick(View)}
+     */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         ArrayList<CalculationItem> items = CalcManager.getInstance().getHistoryItems();
