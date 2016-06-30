@@ -34,7 +34,7 @@ public class HistoryView extends ListView {
     }
 
     private void init() {
-        mAdapter = new HistoryAdapter();
+        mAdapter = new HistoryAdapter(this);
         setAdapter(mAdapter);
     }
 
@@ -54,5 +54,10 @@ public class HistoryView extends ListView {
         smoothScrollToPosition(mAdapter.getCount() - 1);
     }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mAdapter = null;
 
+    }
 }

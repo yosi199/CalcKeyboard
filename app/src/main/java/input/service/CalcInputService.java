@@ -6,26 +6,28 @@ import android.inputmethodservice.KeyboardView;
 import android.view.View;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 
 import com.example.yosimizrachi.calckeyboard.R;
 
+import java.util.ArrayList;
+
 import input.calculator.CalcManager;
+import input.calculator.CalculationItem;
 import keyboard.CalcKeyboard;
 import keyboard.CalcKeyboardView;
-import keyboard.HistoryLayout;
 import keyboard.HistoryView;
 
 /**
  * Created by yosimizrachi on 27/06/16.
  */
-public class CalcInputService extends InputMethodService implements KeyboardView.OnKeyboardActionListener {
+public class CalcInputService extends InputMethodService implements KeyboardView.OnKeyboardActionListener, AdapterView.OnItemClickListener {
 
     private static final String TAG = "CalcInputService";
     private final CalcManager mCalcManager = CalcManager.getInstance();
     private InputMethodManager mInputMethodManager;
     private CalcKeyboardView mKeyboardView;
     private CalcKeyboard mKeyboard;
-    private HistoryLayout mHistoryLayout;
     private HistoryView mHistoryListView;
     private StringBuilder mTextComposition = new StringBuilder();
     private boolean historyShown = false;
@@ -49,10 +51,9 @@ public class CalcInputService extends InputMethodService implements KeyboardView
     @Override
     public View onCreateCandidatesView() {
         // the layout for the history transactions
-        mHistoryLayout = (HistoryLayout) getLayoutInflater().inflate(R.layout.history_layout, null);
-        mHistoryListView = (HistoryView) mHistoryLayout.findViewById(R.id.history);
-
-        return mHistoryLayout;
+        mHistoryListView = (HistoryView) getLayoutInflater().inflate(R.layout.history_layout, null);
+        mHistoryListView.setOnItemClickListener(this);
+        return mHistoryListView;
     }
 
     @Override
@@ -106,15 +107,27 @@ public class CalcInputService extends InputMethodService implements KeyboardView
     public void onComputeInsets(final InputMethodService.Insets outInsets) {
         super.onComputeInsets(outInsets);
         if (!isFullscreenMode()) {
-            outInsets.contentTopInsets = outInsets.visibleTopInsets;
+            outInsets.touchableInsets = outInsets.contentTopInsets = outInsets.visibleTopInsets;
         }
 
     }
 
     @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        ArrayList<CalculationItem> items = CalcManager.getInstance().getHistoryItems();
+        if (items != null && items.size() > 0) {
+            CalculationItem item = items.get(position);
+            InputConnection ic = getCurrentInputConnection();
+            reset();
+            mTextComposition.append(item.getCalculationString());
+            ic.commitText(item.getCalculationString(), 1);
+
+        }
+    }
+
+    @Override
     public void setCandidatesViewShown(boolean shown) {
         super.setCandidatesViewShown(shown);
-        mHistoryLayout.animateToPosition(shown);
     }
 
     private void showInputChooser() {

@@ -46,6 +46,10 @@ public class CalculationItem {
         mResult = result;
     }
 
+    public String getCalculationString() {
+        return mMemberA + mType.getType() + mMemberB;
+    }
+
     public int calculateValue() {
         if (mType != null) {
             switch (mType) {
