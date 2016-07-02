@@ -1,5 +1,4 @@
 package input.calculator;
-
 import java.util.ArrayList;
 
 /**
@@ -94,6 +93,5 @@ public class CalcManager {
             item.setMemberB(Integer.valueOf(input.substring(operatorIndex + 1, input.length())));
         }
     }
-
 
 }

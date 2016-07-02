@@ -71,7 +71,6 @@ public class CalcInputService extends InputMethodService implements KeyboardView
         return mHistoryListView;
     }
 
-
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
         InputConnection ic = getCurrentInputConnection();
@@ -160,7 +159,6 @@ public class CalcInputService extends InputMethodService implements KeyboardView
             reset();
             mTextComposition.append(item.getCalculationString());
             ic.commitText(item.getCalculationString(), 1);
-
         }
     }
 
@@ -178,6 +176,7 @@ public class CalcInputService extends InputMethodService implements KeyboardView
     public void setCandidatesViewShown(boolean shown) {
         super.setCandidatesViewShown(shown);
     }
+
 
     private void showHistory() {
         historyShown = true;

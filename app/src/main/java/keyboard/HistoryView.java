@@ -39,8 +39,10 @@ public class HistoryView extends ListView {
     }
 
     public void loadHistory() {
-        ArrayList<CalculationItem> items = CalcManager.getInstance().getHistoryItems();
-        mAdapter.updateData(items);
+        if (mAdapter != null) {
+            ArrayList<CalculationItem> items = CalcManager.getInstance().getHistoryItems();
+            mAdapter.updateData(items);
+        }
     }
 
     public void update() {
@@ -49,9 +51,17 @@ public class HistoryView extends ListView {
     }
 
     @Override
+    protected void onAttachedToWindow() {
+        if (mAdapter == null) {
+            mAdapter = new HistoryAdapter(this);
+        }
+        super.onAttachedToWindow();
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
         mAdapter = null;
+        super.onDetachedFromWindow();
     }
 
 }

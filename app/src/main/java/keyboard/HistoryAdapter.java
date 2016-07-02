@@ -62,6 +62,7 @@ public class HistoryAdapter extends BaseAdapter implements View.OnClickListener 
             holder.operator = (TextView) convertView.findViewById(R.id.operator);
             holder.memberB = (TextView) convertView.findViewById(R.id.history_member_B);
             holder.result = (TextView) convertView.findViewById(R.id.history_result);
+            holder.topDivider = convertView.findViewById(R.id.top_divider);
             convertView.setTag(holder);
         } else {
             holder = (HistoryHolder) convertView.getTag();
@@ -72,6 +73,12 @@ public class HistoryAdapter extends BaseAdapter implements View.OnClickListener 
         holder.operator.setText(" " + item.getType().getType() + " ");
         holder.memberB.setText("" + item.getMemberB());
         holder.result.setText("" + item.getResult());
+
+        if (position == 0) {
+            holder.topDivider.setVisibility(View.VISIBLE);
+        } else {
+            holder.topDivider.setVisibility(View.INVISIBLE);
+        }
 
         return convertView;
     }
@@ -91,6 +98,7 @@ public class HistoryAdapter extends BaseAdapter implements View.OnClickListener 
 
     public static class HistoryHolder {
         LinearLayout layout;
+        View topDivider;
         TextView memberA;
         TextView operator;
         TextView memberB;
