@@ -1,12 +1,10 @@
 package input.service;
 
-import android.animation.ValueAnimator;
 import android.content.res.Configuration;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -76,13 +74,6 @@ public class CalcInputService extends InputMethodService implements KeyboardView
         return mHistoryListView;
     }
 
-    @Override
-    public void onStartInput(EditorInfo attribute, boolean restarting) {
-        super.onStartInput(attribute, restarting);
-        super.setCandidatesViewShown(true);
-//        mHistoryListView.getLayoutParams().height = 0;
-//        mHistoryListView.requestLayout();
-    }
 
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
@@ -156,10 +147,10 @@ public class CalcInputService extends InputMethodService implements KeyboardView
 
     @Override
     public void onComputeInsets(final InputMethodService.Insets outInsets) {
-//        super.onComputeInsets(outInsets);
-////        if (!isFullscreenMode()) {
-//        outInsets.touchableInsets = outInsets.contentTopInsets = outInsets.visibleTopInsets;
-////        }
+        super.onComputeInsets(outInsets);
+//        if (!isFullscreenMode()) {
+        outInsets.touchableInsets = outInsets.contentTopInsets = outInsets.visibleTopInsets;
+//        }
     }
 
     /**
@@ -197,15 +188,12 @@ public class CalcInputService extends InputMethodService implements KeyboardView
     private void showHistory() {
         historyShown = true;
         mHistoryListView.loadHistory();
-        expand(mHistoryListView, false);
-//        setCandidatesViewShown(true);
+        setCandidatesViewShown(true);
     }
 
     private void hideHistory() {
         historyShown = false;
-        expand(mHistoryListView, true);
-
-//        setCandidatesViewShown(false);
+        setCandidatesViewShown(false);
     }
 
     private void showInputChooser() {
@@ -254,23 +242,5 @@ public class CalcInputService extends InputMethodService implements KeyboardView
 
     }
 
-    private void expand(final View viewToIncreaseHeight, boolean reversed) {
-        int maxHeight = getResources().getDimensionPixelSize(R.dimen.history_height);
-        ValueAnimator anim = ValueAnimator.ofInt(0, maxHeight);
-        anim.setDuration(3000);
-        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int value = (int) animation.getAnimatedValue();
-                viewToIncreaseHeight.getRootView().getRootView().getLayoutParams().height = value;
-                viewToIncreaseHeight.getRootView().getRootView().requestLayout();
-            }
-        });
-        if (reversed) {
-            anim.reverse();
-        } else {
-            anim.start();
-        }
-    }
 
 }
