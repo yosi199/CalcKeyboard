@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/item_root_layout"
     android:layout_width="match_parent"
-    android:layout_height="42dp"
+    android:layout_height="45dp"
     android:clickable="true"
     android:descendantFocusability="blocksDescendants"
     android:orientation="vertical">

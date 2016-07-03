@@ -38,6 +38,7 @@ public class HistoryView extends ListView {
         setAdapter(mAdapter);
     }
 
+
     public void loadHistory() {
         if (mAdapter != null) {
             ArrayList<CalculationItem> items = CalcManager.getInstance().getHistoryItems();
@@ -63,5 +64,4 @@ public class HistoryView extends ListView {
         mAdapter = null;
         super.onDetachedFromWindow();
     }
-
 }
