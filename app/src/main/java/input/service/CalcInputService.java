@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.example.yosimizrachi.calckeyboard.R;
 
@@ -19,6 +18,8 @@ import input.calculator.CalculationItem;
 import keyboard.CalcKeyboard;
 import keyboard.CalcKeyboardView;
 import keyboard.HistoryAdapter;
+import keyboard.HistoryLayout;
+import keyboard.HistoryListView;
 
 /**
  * Created by yosimizrachi on 27/06/16.
@@ -32,7 +33,7 @@ public class CalcInputService extends InputMethodService implements
     private InputMethodManager mInputMethodManager;
     private CalcKeyboardView mKeyboardView;
     private CalcKeyboard mKeyboard;
-    private ListView mHistoryListView;
+    private HistoryListView mHistoryListView;
     private StringBuilder mTextComposition = new StringBuilder();
     private int mLastDisplayWidth;
     private boolean historyShown = false;
@@ -42,6 +43,7 @@ public class CalcInputService extends InputMethodService implements
         super.onCreate();
         mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         mCalcManager = new CalcManager();
+
     }
 
     @Override
@@ -55,11 +57,8 @@ public class CalcInputService extends InputMethodService implements
             mLastDisplayWidth = displayWidth;
         }
         mKeyboard = new CalcKeyboard(this, R.xml.digits);
-        getWindow().getWindow().getDecorView().setBackgroundColor(getResources().getColor(android.R.color.transparent));
-
 
     }
-
 
     @Override
     public View onCreateInputView() {
@@ -74,12 +73,13 @@ public class CalcInputService extends InputMethodService implements
     public View onCreateCandidatesView() {
         // the layout for the history transactions
         HistoryAdapter adapter = new HistoryAdapter(this);
-        mHistoryListView = (ListView) getLayoutInflater().inflate(R.layout.history_layout, null);
+        HistoryLayout layout = (HistoryLayout) getLayoutInflater().inflate(R.layout.history_layout, null);
+        mHistoryListView = (HistoryListView) layout.findViewById(R.id.history);
         mHistoryListView.setAdapter(adapter);
         mHistoryListView.setOnItemClickListener(this);
-        return mHistoryListView;
+        setCandidatesViewShown(true);
+        return layout;
     }
-
 
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
@@ -196,17 +196,18 @@ public class CalcInputService extends InputMethodService implements
         super.setCandidatesViewShown(shown);
     }
 
-
     private void showHistory() {
         HistoryAdapter adapter = (HistoryAdapter) mHistoryListView.getAdapter();
         adapter.updateData(mCalcManager.getHistoryItems());
         historyShown = true;
-        setCandidatesViewShown(true);
+        mHistoryListView.animateHeight(true);
+
+
     }
 
     private void hideHistory() {
         historyShown = false;
-        setCandidatesViewShown(false);
+        mHistoryListView.animateHeight(false);
     }
 
     private void showInputChooser() {

@@ -3,10 +3,10 @@
 <!-- TODO- add back button key-->
 
 <Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
-    android:horizontalGap="0dp"
+    android:horizontalGap="1px"
     android:keyHeight="6.5%p"
     android:keyWidth="25%p"
-    android:verticalGap="0dp">
+    android:verticalGap="1px">
 
     <Row>
         <Key
