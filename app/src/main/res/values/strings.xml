@@ -4,4 +4,7 @@
     <string name="subtype_digits">Digits</string>
     <string name="error">Error</string>
     <string name="empty">Please enter calculation</string>
+    <string name="conf">history_pref</string>
+    <string name="seen_notification">notification</string>
+    <string name="version">Version 2.</string>
 </resources>

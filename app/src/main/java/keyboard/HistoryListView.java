@@ -15,7 +15,14 @@ import com.example.yosimizrachi.calckeyboard.R;
  */
 public class HistoryListView extends ListView implements ValueAnimator.AnimatorUpdateListener {
 
+    /**
+     * the animator used for translationY
+     */
     private ValueAnimator mAnimator;
+
+    /**
+     * the max height this view can have
+     */
     private int maxHeight;
 
 
@@ -40,9 +47,9 @@ public class HistoryListView extends ListView implements ValueAnimator.AnimatorU
         maxHeight = (int) (getResources().getDimensionPixelSize(R.dimen.history_item_height) * 1.2);
         getTranslationY();
         setLayoutTransition(new LayoutTransition());
-        setTranslationY(500);
+        setTranslationY(400);
 
-        mAnimator = ValueAnimator.ofInt(500, 0);
+        mAnimator = ValueAnimator.ofInt(400, 0);
         mAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         mAnimator.addUpdateListener(this);
         mAnimator.setDuration(300);
@@ -56,6 +63,11 @@ public class HistoryListView extends ListView implements ValueAnimator.AnimatorU
     }
 
 
+    /**
+     * this will start animating the translationY of the list
+     *
+     * @param show indicating in which direction to set the animation
+     */
     public void animateHeight(boolean show) {
         if (show) {
             mAnimator.start();
