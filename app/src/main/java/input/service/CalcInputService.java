@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.example.yosimizrachi.calckeyboard.R;
 
@@ -17,19 +18,21 @@ import input.calculator.CalcManager;
 import input.calculator.CalculationItem;
 import keyboard.CalcKeyboard;
 import keyboard.CalcKeyboardView;
-import keyboard.HistoryView;
+import keyboard.HistoryAdapter;
 
 /**
  * Created by yosimizrachi on 27/06/16.
  */
-public class CalcInputService extends InputMethodService implements KeyboardView.OnKeyboardActionListener, AdapterView.OnItemClickListener {
+public class CalcInputService extends InputMethodService implements
+        KeyboardView.OnKeyboardActionListener,
+        AdapterView.OnItemClickListener {
 
     private static final String TAG = "CalcInputService";
-    private final CalcManager mCalcManager = CalcManager.getInstance();
+    private CalcManager mCalcManager;
     private InputMethodManager mInputMethodManager;
     private CalcKeyboardView mKeyboardView;
     private CalcKeyboard mKeyboard;
-    private HistoryView mHistoryListView;
+    private ListView mHistoryListView;
     private StringBuilder mTextComposition = new StringBuilder();
     private int mLastDisplayWidth;
     private boolean historyShown = false;
@@ -38,6 +41,7 @@ public class CalcInputService extends InputMethodService implements KeyboardView
     public void onCreate() {
         super.onCreate();
         mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        mCalcManager = new CalcManager();
     }
 
     @Override
@@ -69,7 +73,9 @@ public class CalcInputService extends InputMethodService implements KeyboardView
     @Override
     public View onCreateCandidatesView() {
         // the layout for the history transactions
-        mHistoryListView = (HistoryView) getLayoutInflater().inflate(R.layout.history_layout, null);
+        HistoryAdapter adapter = new HistoryAdapter(this);
+        mHistoryListView = (ListView) getLayoutInflater().inflate(R.layout.history_layout, null);
+        mHistoryListView.setAdapter(adapter);
         mHistoryListView.setOnItemClickListener(this);
         return mHistoryListView;
     }
@@ -114,7 +120,7 @@ public class CalcInputService extends InputMethodService implements KeyboardView
                     mTextComposition.append(result);
                     ic.commitText(String.valueOf(result), 1);
                     if (historyShown) { // if history already shown to user - update the list
-                        mHistoryListView.update();
+                        updateHistory();
                     }
                 } catch (NumberFormatException exception) {
                     // "complicated expressions not yet implemented. For now only simple expression will be evaluated.
@@ -133,6 +139,12 @@ public class CalcInputService extends InputMethodService implements KeyboardView
                 ic.commitText(String.valueOf(code), 1);
                 mTextComposition.append(code);
         }
+    }
+
+    private void updateHistory() {
+        HistoryAdapter adapter = (HistoryAdapter) mHistoryListView.getAdapter();
+        adapter.notifyDataSetChanged();
+        mHistoryListView.smoothScrollToPosition(adapter.getCount() - 1);
     }
 
     private void printError() {
@@ -158,7 +170,7 @@ public class CalcInputService extends InputMethodService implements KeyboardView
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        ArrayList<CalculationItem> items = CalcManager.getInstance().getHistoryItems();
+        ArrayList<CalculationItem> items = mCalcManager.getHistoryItems();
         if (items != null && items.size() > 0) {
             CalculationItem item = items.get(position);
             InputConnection ic = getCurrentInputConnection();
@@ -186,8 +198,9 @@ public class CalcInputService extends InputMethodService implements KeyboardView
 
 
     private void showHistory() {
+        HistoryAdapter adapter = (HistoryAdapter) mHistoryListView.getAdapter();
+        adapter.updateData(mCalcManager.getHistoryItems());
         historyShown = true;
-        mHistoryListView.loadHistory();
         setCandidatesViewShown(true);
     }
 

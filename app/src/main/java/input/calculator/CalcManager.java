@@ -1,4 +1,5 @@
 package input.calculator;
+
 import java.util.ArrayList;
 
 /**
@@ -6,7 +7,6 @@ import java.util.ArrayList;
  */
 public class CalcManager {
 
-    private static final CalcManager INSTANCE = new CalcManager();
 
     // Native code
     static {
@@ -15,11 +15,7 @@ public class CalcManager {
 
     private ArrayList<CalculationItem> mCalculationItems;
 
-    private CalcManager() {
-    }
-
-    public static CalcManager getInstance() {
-        return INSTANCE;
+    public CalcManager() {
     }
 
 
@@ -52,7 +48,7 @@ public class CalcManager {
         return calculationItem.calculateValue();
     }
 
-    private final void setOperationType(String input, CalculationItem item) {
+    private void setOperationType(String input, CalculationItem item) {
 
         for (int i = 0; i < input.length(); i++) {
             char currChar = input.charAt(i);
@@ -78,7 +74,7 @@ public class CalcManager {
         }
     }
 
-    private final void parseMemberA(String input, CalculationItem item) {
+    private void parseMemberA(String input, CalculationItem item) {
 
         if (item.getType() != null) {
             int operatorIndex = item.getType().getOperatorIndex();
@@ -86,7 +82,7 @@ public class CalcManager {
         }
     }
 
-    private final void parseMemberB(String input, CalculationItem item) {
+    private void parseMemberB(String input, CalculationItem item) {
 
         if (item.getType() != null) {
             int operatorIndex = item.getType().getOperatorIndex();

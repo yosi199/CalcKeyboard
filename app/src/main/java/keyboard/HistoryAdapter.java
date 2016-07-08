@@ -1,5 +1,6 @@
 package keyboard;
 
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +21,13 @@ import input.calculator.CalculationItem;
 public class HistoryAdapter extends BaseAdapter implements View.OnClickListener {
 
     private ArrayList<CalculationItem> mItems = new ArrayList<>();
-    private HistoryView mClickListener;
+    private AdapterView.OnItemClickListener mClickListener;
 
-    public HistoryAdapter(HistoryView listener) {
+    public HistoryAdapter(AdapterView.OnItemClickListener listener) {
         mClickListener = listener;
     }
 
-    public void updateData(ArrayList<CalculationItem> items) {
+    public void updateData(@NonNull ArrayList<CalculationItem> items) {
         mItems = items;
         notifyDataSetChanged();
     }
@@ -93,7 +94,7 @@ public class HistoryAdapter extends BaseAdapter implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         int position = (int) v.getTag(R.id.item_id);
-        mClickListener.performItemClick(v, position, getItemId(position));
+        mClickListener.onItemClick(null, v, position, getItemId(position));
     }
 
     public static class HistoryHolder {
